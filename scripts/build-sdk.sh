@@ -1,24 +1,32 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "Building Airflow Task SDK 1.4.0b2 locally..."
+# Build Airflow Java SDK from source and install to Maven local repository
+# This script builds the real Java SDK instead of using stubs
 
-# Create temp directory
-TEMP_DIR=$(mktemp -d)
-cd "$TEMP_DIR"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Clone Airflow repository
-echo "Cloning Apache Airflow repository..."
-git clone --depth 1 --branch 3.4.0b2 https://github.com/apache/airflow.git
+echo "Building Airflow Java SDK..."
 
-cd airflow/task-sdk
+# Clone Airflow repository if not present
+AIRFLOW_REPO_DIR="${PROJECT_ROOT}/.airflow-repo"
+if [ ! -d "$AIRFLOW_REPO_DIR" ]; then
+    echo "Cloning Apache Airflow repository..."
+    git clone --depth 1 --branch 3.4.0b2 https://github.com/apache/airflow.git "$AIRFLOW_REPO_DIR"
+fi
 
-# Build and publish to Maven Local
-echo "Building and publishing to Maven Local..."
-./gradlew publishToMavenLocal
+# Build Java SDK
+cd "${AIRFLOW_REPO_DIR}/airflow/dag-processing/dag-processing-java-sdk"
 
-echo "SDK built and published to ~/.m2/repository"
-echo "Cleaning up..."
-rm -rf "$TEMP_DIR"
+echo "Building Java SDK with Gradle..."
+./gradlew clean build publishToMavenLocal -x test
 
-echo "Done!"
+echo "✓ Airflow Java SDK built and published to Maven local repository"
+echo "  Location: ~/.m2/repository/org/apache/airflow/"
+
+# Copy the built artifacts to project
+mkdir -p "${PROJECT_ROOT}/java-dags/libs"
+cp build/libs/*.jar "${PROJECT_ROOT}/java-dags/libs/" 2>/dev/null || true
+
+echo "✓ Build complete!"

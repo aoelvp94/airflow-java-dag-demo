@@ -1,0 +1,2 @@
+# Airflow providers and dependencies
+apache-airflow-providers-common-sql>=1.10.0

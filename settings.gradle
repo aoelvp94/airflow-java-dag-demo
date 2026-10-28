@@ -1,0 +1,2 @@
+rootProject.name = 'airflow-java-dag-demo'
+include 'java-dags'

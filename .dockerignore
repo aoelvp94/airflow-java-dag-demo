@@ -1,0 +1,10 @@
+.astro
+.git
+.github
+.gitignore
+.gradle
+build/
+.env
+airflow_settings.yaml
+logs/
+*.log

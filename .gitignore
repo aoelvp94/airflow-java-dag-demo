@@ -1,9 +1,13 @@
-# Gradle
+.astro
+.env
+airflow_settings.yaml
+logs/
+*.pyc
+__pycache__/
+*.log
 .gradle/
 build/
-gradle-app.setting
-!gradle-wrapper.jar
-!gradle-wrapper.properties
+.DS_Store
 
 # Maven
 target/
@@ -15,7 +19,6 @@ target/
 !gradle-wrapper.jar
 *.war
 *.ear
-*.log
 
 # IDE
 .idea/
@@ -27,10 +30,6 @@ target/
 .classpath
 .settings/
 
-# Docker
-*.log
-logs/
-
 # Airflow
 dags/__pycache__/
 airflow.db
@@ -39,7 +38,6 @@ airflow.cfg
 standalone_admin_password.txt
 
 # OS
-.DS_Store
 Thumbs.db
 
 # Temp
@@ -47,3 +45,7 @@ Thumbs.db
 *.bak
 *.swp
 *~
+
+# Gradle wrapper
+gradle-app.setting
+!gradle-wrapper.properties
