@@ -1,52 +1,26 @@
-# Multi-stage Dockerfile for Airflow 3.4 with Java native DAG support
+# syntax=docker/dockerfile:1
+ARG AIRFLOW_REF=task-sdk/1.4.0b2
 
-# Stage 1: Build Java DAG
-FROM gradle:8.5-jdk17 AS java-builder
+# Stage 1: build the Airflow Java SDK from source into mavenLocal.
+FROM gradle:8.14-jdk17 AS sdk
+ARG AIRFLOW_REF
+RUN git clone --depth 1 --branch "${AIRFLOW_REF}" --filter=blob:none --sparse \
+      https://github.com/apache/airflow /airflow \
+ && git -C /airflow sparse-checkout set java-sdk
+WORKDIR /airflow/java-sdk
+RUN ./gradlew publishToMavenLocal -PskipSigning=true --no-daemon
 
-WORKDIR /build
+# Stage 2: build the Dag bundle.
+FROM gradle:8.14-jdk17 AS build
+COPY --from=sdk /root/.m2 /root/.m2
+WORKDIR /src
+COPY settings.gradle build.gradle gradle.properties ./
+COPY src ./src
+RUN gradle bundle --no-daemon
 
-# Copy Gradle files
-COPY java-dag/build.gradle java-dag/settings.gradle /build/
-COPY java-dag/gradle /build/gradle/
-COPY java-dag/gradlew /build/
-
-# Download dependencies
-RUN ./gradlew dependencies --no-daemon || true
-
-# Copy source code
-COPY java-dag/src /build/src/
-
-# Build the DAG bundle
-RUN ./gradlew build --no-daemon
-
-# Stage 2: Airflow runtime with JRE
+# Stage 3: Airflow 3.4 beta + JRE 17 + the bundle in the dags folder.
 FROM apache/airflow:3.4.0b2-python3.12
-
-# Switch to root to install JRE
-USER root
-
-# Install OpenJDK 17 JRE
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends openjdk-17-jre-headless && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set Java environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+COPY --from=eclipse-temurin:17-jre /opt/java/openjdk /opt/java/openjdk
+ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-# Create directories for Java DAGs
-RUN mkdir -p /opt/airflow/dags/java && \
-    chown -R airflow:root /opt/airflow/dags
-
-# Switch back to airflow user
-USER airflow
-
-# Copy built DAG bundle from builder stage
-COPY --chown=airflow:root --from=java-builder /build/build/dags/*.jar /opt/airflow/dags/java/
-
-# Verify Java installation
-RUN java -version
-
-# Set working directory
-WORKDIR /opt/airflow
+COPY --from=build --chown=airflow:root /src/build/bundle/ /opt/airflow/dags/java/

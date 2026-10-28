@@ -1,0 +1,10 @@
+// The Airflow Java SDK with DagDef / native Dags is not on Maven Central yet,
+// so the plugin and libraries come from mavenLocal (see scripts/build-sdk.sh).
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = "airflow-java-dag-demo"

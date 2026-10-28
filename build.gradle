@@ -1,0 +1,23 @@
+plugins {
+    id("org.apache.airflow.sdk") version "${airflowSdkVersion}"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.apache.airflow:airflow-sdk-processor:${airflowSdkVersion}")
+    implementation("org.apache.airflow:airflow-sdk:${airflowSdkVersion}")
+    implementation("org.apache.airflow:airflow-sdk-jpl:${airflowSdkVersion}")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+airflowBundle {
+    mainClass = "io.github.aoelvp94.airflow.hello.Main"
+}

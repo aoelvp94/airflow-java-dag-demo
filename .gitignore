@@ -1,49 +1,8 @@
-# Gradle
-.gradle/
 build/
-gradle-app.setting
-!gradle-wrapper.jar
-!gradle-wrapper.properties
-
-# Maven
-target/
-.m2/
-
-# Java
-*.class
-*.jar
-!gradle-wrapper.jar
-*.war
-*.ear
-*.log
-
-# IDE
+.gradle/
 .idea/
 *.iml
-*.ipr
-*.iws
-.vscode/
-.project
-.classpath
-.settings/
-
-# Docker
-*.log
+out/
 logs/
-
-# Airflow
-dags/__pycache__/
-airflow.db
-airflow-webserver.pid
-airflow.cfg
-standalone_admin_password.txt
-
-# OS
+.env
 .DS_Store
-Thumbs.db
-
-# Temp
-*.tmp
-*.bak
-*.swp
-*~
