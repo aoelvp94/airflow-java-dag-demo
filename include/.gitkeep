@@ -1,0 +1,12 @@
+# Include directory for additional files
+# Add custom Python modules, scripts, or data files here
+# These will be available in the Airflow container at /usr/local/airflow/include/
+
+# Example structure:
+# include/
+#   ├── sql/
+#   │   └── queries.sql
+#   ├── scripts/
+#   │   └── helper.py
+#   └── data/
+#       └── sample.csv

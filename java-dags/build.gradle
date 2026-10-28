@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+dependencies {
+    // Airflow Java SDK from mavenLocal
+    implementation 'org.apache.airflow:airflow-dag-processing-java-sdk:3.4.0b2'
+}
+
+jar {
+    archiveBaseName = 'airflow-java-dags'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}

@@ -1,0 +1,9 @@
+# Tests directory
+# Add pytest tests here for DAGs and custom code
+
+# Example structure:
+# tests/
+#   ├── dags/
+#   │   └── test_dag_integrity.py
+#   └── operators/
+#       └── test_custom_operator.py

@@ -1,0 +1,10 @@
+.astro
+.env
+airflow_settings.yaml
+logs/
+*.pyc
+__pycache__/
+*.log
+.gradle/
+build/
+.DS_Store

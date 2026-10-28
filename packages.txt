@@ -1,0 +1,2 @@
+# OS-level packages (installed via apt-get)
+# JRE is installed in Dockerfile directly

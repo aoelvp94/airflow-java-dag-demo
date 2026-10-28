@@ -1,0 +1,12 @@
+# Plugins directory for Airflow plugins
+# Add custom operators, hooks, sensors, or macros here
+# These will be automatically loaded by Airflow
+
+# Example structure:
+# plugins/
+#   ├── operators/
+#   │   └── custom_operator.py
+#   ├── hooks/
+#   │   └── custom_hook.py
+#   └── sensors/
+#       └── custom_sensor.py

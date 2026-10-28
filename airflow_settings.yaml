@@ -1,0 +1,21 @@
+# Airflow settings for local development
+# This file is used by Astro CLI to configure Airflow
+
+airflow:
+  connections:
+    # Add connections here
+  pools:
+    # Java queue for JavaOperator tasks
+    - pool_name: java
+      pool_slot: 10
+      pool_description: "Pool for Java DAG tasks"
+  variables:
+    # Add variables here
+  config:
+    core:
+      executor: LocalExecutor
+      load_examples: False
+    webserver:
+      expose_config: True
+    scheduler:
+      dag_dir_list_interval: 30

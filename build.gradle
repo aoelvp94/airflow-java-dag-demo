@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    group = 'com.example.airflow'
+    version = '1.0.0'
+    
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    
+    dependencies {
+        // Airflow Java SDK - uses mavenLocal() from build-sdk.sh
+        implementation 'org.apache.airflow:airflow-dag-processing-java-sdk:3.4.0b2'
+        
+        // Logging
+        implementation 'org.slf4j:slf4j-api:2.0.9'
+        implementation 'ch.qos.logback:logback-classic:1.4.11'
+        
+        // Testing
+        testImplementation 'junit:junit:4.13.2'
+    }
+    
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+    
+    jar {
+        manifest {
+            attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+            )
+        }
+    }
+}
