@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url "https://repository.apache.org/content/repositories/snapshots"
+    }
+}
+
+dependencies {
+    // Note: Using local SDK stubs since 1.4.0b2 is not yet in Maven Central
+    // In production, use: implementation 'org.apache.airflow:airflow-task-sdk:1.4.0b2'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
+}
+
+shadowJar {
+    archiveBaseName.set('demo-java-dag')
+    archiveClassifier.set('')
+    archiveVersion.set('1.0.0')
+    destinationDirectory.set(file("${buildDir}/dags"))
+    
+    manifest {
+        attributes 'Main-Class': 'com.example.airflow.DemoJavaDag'
+    }
+}
+
+build {
+    dependsOn shadowJar
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
