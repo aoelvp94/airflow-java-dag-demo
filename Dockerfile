@@ -1,4 +1,4 @@
-# Multi-stage build for Java DAG support
+# Multi-stage build for Java DAG support on Airflow 3.4.0b2
 FROM gradle:8.5-jdk17 AS java-builder
 
 WORKDIR /build
